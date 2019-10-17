@@ -1,86 +1,45 @@
 package com.example.demo.controllers;
 
-import com.Book;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
-import org.eclipse.jdt.internal.compiler.ast.Clinit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.session.SessionInformation;
-import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import javax.validation.constraints.Null;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.security.Principal;
-import java.sql.*;
-import org.springframework.web.bind.annotation.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.NoSuchElementException;
 
-import com.example.demo.models.Client;
-import com.example.demo.models.ClientEmail;
-import com.example.demo.models.ClientOrder;
-import com.example.demo.models.ConsistsOf;
-import com.example.demo.models.Employee;
-import com.example.demo.models.EmployeeEmail;
-import com.example.demo.models.EmployeePhoneNo;
-import com.example.demo.models.Plant;
-import com.example.demo.models.RawMaterial;
-import com.example.demo.models.Role;
-import com.example.demo.models.User;
-import com.example.demo.service.SecurityService;
-import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 import com.example.NotFoundException;
 import com.example.demo.Dao.ClientDao;
 import com.example.demo.Dao.ClientEmailDao;
 import com.example.demo.Dao.ClientOrderDao;
 import com.example.demo.Dao.ConsistsOfDao;
 import com.example.demo.Dao.EmployeeDao;
-import com.example.demo.Dao.EmployeeEmailDao;
-import com.example.demo.Dao.EmployeePhoneNoDao;
-import com.example.demo.Dao.PlantDao;
 import com.example.demo.Dao.ProductsDao;
-import com.example.demo.Dao.RawMaterialDao;
 import com.example.demo.Dao.RoleDao;
 import com.example.demo.Dao.UserDao;
-import com.example.demo.validators.*;
+import com.example.demo.models.Client;
+import com.example.demo.models.ClientEmail;
+import com.example.demo.models.ClientOrder;
+import com.example.demo.models.Role;
+import com.example.demo.models.User;
+import com.example.demo.service.SecurityService;
+import com.example.demo.validators.ClientValidator;
+import com.example.demo.validators.EmailValidator;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class ClientController {
@@ -167,12 +126,12 @@ private SessionRegistry sessionRegistry;
         //     m.addAttribute("plants", plantDao.loadAll(conn));
         //     return "employee_new";
         // }
-        clientValidator.validate(client, result);
-        if(result.hasErrors())
-        {
-            m.addAttribute("client", new Client());
-            return "client_new";
-        }
+        //clientValidator.validate(client, result);
+        // if(result.hasErrors())
+        // {
+        //     m.addAttribute("client", new Client());
+        //     return "client_new";
+        // }
         User user = new User();
         user.setUserName(client.getUserName());
         user.setPassword(bCryptPasswordEncoder.encode(client.getPassword()));
@@ -181,13 +140,36 @@ private SessionRegistry sessionRegistry;
         userDao.create(conn, user);
         int id = user.getUserId();
         client.setClientId(id);
+        System.out.println("\n\n"+client.getPhoneNumber()+"\n\n");
         clientDao.create(conn, client);
         role.setUserId(id);
         roleDao.create(conn, role);
-
+        
         securityService.autoLogin(user.getUserName(), user.getPassword());
-
+        
         return "redirect:/client/dashboard" ;
+    }
+    @PostMapping("/status/edit")
+    public ResponseEntity<Integer> edit_status(@RequestParam Integer clientOrderId,@RequestParam String status,Model m,Principal principal) throws SQLException, NotFoundException
+    {
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/draft1", "root", "rakshit");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        ClientOrder clientOrder=new ClientOrder();
+        clientOrder.setClientOrderId(clientOrderId);
+        try {
+            clientOrderDao.load(conn, clientOrder);
+        } catch (NotFoundException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        clientOrder.setStatus(status);
+        clientOrderDao.save(conn, clientOrder);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
     @GetMapping("/client/detail")
     public String employee_detail (Model m,Principal principal) throws SQLException, NotFoundException {

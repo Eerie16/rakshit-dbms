@@ -158,8 +158,7 @@ public class ClientOrderController {
         //     return "redirect:/invalid";
         m.addAttribute("rolename", role.getRoleName());
         Client client=new Client();
-        client.setClientId(user.getUserId());
-        clientDao.load(conn, client);
+        client.setClientId(clientOrder.getClientOrderId());
         clientOrderDao.load(conn, clientOrder);
         m.addAttribute("clientOrder", clientOrder);
         m.addAttribute("list",jdbcTemplate.queryForList("select c.quantity,p.name from ConsistsOf c,Products p where c.productId=p.productId and c.clientOrderId=?",clientOrder.getClientOrderId()));
@@ -256,6 +255,8 @@ public class ClientOrderController {
         role= (Role)x.get(0);
         if(role.getRoleName().equals("client")||role.getRoleName().equals("Supplier"))
             return "redirect:/invalid";
+        m.addAttribute("rolename", role.getRoleName());
+        m.addAttribute("user", user);
         m.addAttribute("orders", clientOrderDao.loadAll(conn));
         return "show_orders";
     }

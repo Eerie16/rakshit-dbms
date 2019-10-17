@@ -38,7 +38,7 @@
             <form:errors path="street"></form:errors>
             <br>
             <form:label path="phoneNumber">phoneNumber</form:label>
-            <form:input type="text" pattern="[6-9]\d{9}" path="phoneNumber"/>       
+            <form:input type="number"  path="phoneNumber"/>       
             <form:errors path="phoneNumber"></form:errors>
             <br>
             <form:label path="organisation">organisation</form:label>

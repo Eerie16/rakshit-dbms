@@ -11,8 +11,8 @@
     <body>
         <form:form method="POST" action="/product/${product.getProductId()}/edit" modelAttribute="product">
             <h1>Name <form:input type="text" path="name" value="${product.getName()}"/> Price <form:input type="number" path="price" value="${product.getPrice()}"/> 
-                <form:select path="employeeId" value="${product.getEmployeeId()}">
-                        Employee
+                Employee<form:select path="employeeId" value="${product.getEmployeeId()}">
+                        
                         <c:forEach var="employee" items="${employees}">
                             <option value="${employee.getEmployeeId()}">${employee.getLname()} ${employee.getFname()}</option>
                         </c:forEach>
@@ -20,6 +20,7 @@
             </h1>
             <br>
             <input type="submit" value="Update">
+            
         </form:form>
         <h3>RawMaterials Required</h3>
         <table>

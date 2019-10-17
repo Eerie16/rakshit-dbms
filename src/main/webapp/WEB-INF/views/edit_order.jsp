@@ -30,6 +30,10 @@
 </select>
 <input id="quantity" type="number"/>
 <input type="button" id="add_product_btn" value ="Add">
+<c:if test="${rolename.equals('Admin')||rolename.equals('Employee')}">
+    <input id="status" type="text" value="${clientOrder.getStatus()}"/>
+    <input type="button" id="add_status_btn" value ="Add">
+</c:if>
 <h3>Remark</h3>
 <input id="remarkNew" type="text" value="${remark}"/>
 <input type="button" id="add_remark_btn" value="Update">
@@ -109,5 +113,23 @@ crossorigin="anonymous"></script>
             });
         });
     </script>
+    <script>
+    $("#add_status_btn").click(function(){
+        $.ajax({
+            url:"/status/edit",
+            type:"post",
+            data:{
+                clientOrderId:${clientOrder.getClientOrderId()},
+                status:$("#status").val()
+            },
+            success:function(data,status,xhr){
+                location.reload();
+            },
+            error:function(xhr, httpStatusMessage, customErrorMessage){
+                alert(error);
+            }
+        });
+    });
+</script>
 </body>
 </html>

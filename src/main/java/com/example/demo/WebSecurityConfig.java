@@ -41,7 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/check/user/**").permitAll()
                 .antMatchers("/client/dashboard","/client/detail","/client/email/add","/client/edit","/client/order/new","/client/order/{clientOrderId}","/clientOrder/add","/client/order/remark","/product/show").hasAnyAuthority("Client","Admin")
                 .antMatchers("/employee/new","/employee/contacts/add").permitAll()
-                .antMatchers("/employee/detail/**","/employee/contacts/add","/employee/edit","/plant/show","/plant/new","/plant/**","/product/show","/product/new","/product/**").hasAnyAuthority("Admin","Employee")
+                .antMatchers("/employee/detail/**","/employee/contacts/add","/employee/edit","/plant/show","/plant/new","/plant/**","/product/show","/product/new","/product/**").hasAnyAuthority("Admin","Employee","Client")
                 .antMatchers("/admin/dashboard","/supplier/show").hasAnyAuthority("Admin")
                 .antMatchers(HttpMethod.POST,"/client/dashboard","/client/detail","/client/email/add","/client/edit","/client/order/new","/client/order/{clientOrderId}","/clientOrder/add","/client/order/remark").hasAuthority("Client")
                 .antMatchers("/employee/detail").hasAuthority("Employee").antMatchers("/user/**").hasAuthority("USER").antMatchers("/admin/**").hasAuthority("ADMIN")

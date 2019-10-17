@@ -20,7 +20,9 @@
             </tr>
             <c:forEach var="order" items="${orders}">
                 <tr>
+                    <c:if test="${rolename.equals('Admin')||rolename.equals('Employee')||order.getClientId()==user.getUserId()}">
                     <th><a href="/client/order/${order.getClientOrderId()}">"${order.getClientOrderId()}"</a></th>
+                    </c:if>
                 </tr>
             </c:forEach>
         </table>

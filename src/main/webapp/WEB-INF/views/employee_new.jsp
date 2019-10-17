@@ -14,11 +14,11 @@
             <form:errors path="userName"></form:errors>
             <br>
             <form:label path="password">password</form:label>
-            <form:input path="password"/>
+            <form:input type="password" path="password"/>
             <form:errors path="password"></form:errors>
             <br>
             <form:label path="confirmPassword">confirmPassword</form:label>
-            <form:input path="confirmPassword"/>
+            <form:input type="password" path="confirmPassword"/>
             <form:errors path="confirmPassword"></form:errors>
             <br>
             <form:label path="fname">First Name</form:label>

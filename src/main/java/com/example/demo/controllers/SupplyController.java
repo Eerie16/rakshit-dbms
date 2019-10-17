@@ -29,6 +29,7 @@ import com.example.demo.models.User;
 import com.example.demo.service.SecurityService;
 import com.example.demo.validators.EmployeeValidator;
 import com.example.demo.validators.PlantValidator;
+import com.example.demo.validators.SupplierValidator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,6 +53,8 @@ public class SupplyController {
     EmployeeValidator employeeValidator;
     @Autowired
     EmployeeDao employeeDao;
+    @Autowired
+    SupplierValidator supplierValidator;
     @Autowired
     EmployeePhoneNoDao employeePhoneNoDao;
     @Autowired
@@ -125,6 +128,10 @@ public class SupplyController {
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/draft1", "root", "rakshit");
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        supplierValidator.validate(supplier, result);
+        if(result.hasErrors()){
+            return "supplier_new";
         }
         User user=new User();
         user.setUserName(supplier.getUserName());

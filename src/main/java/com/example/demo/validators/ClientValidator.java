@@ -41,26 +41,28 @@ public class ClientValidator implements Validator {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userName", "NotEmpty");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "NotEmpty");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "confirmPassword", "NotEmpty");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lname", "NotEmpty");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "fname", "NotEmpty");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "gender", "NotEmpty");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "city", "NotEmpty");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "phoneNumber", "NotEmpty");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userName", "NotEmpty", new Object[]{"userName"}, "userName should not be empty");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "NotEmpty", new Object[]{"password"}, "password should not be empty");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "confirmPassword", "NotEmpty", new Object[]{"confirmPassword"}, "confirmPassword should not be empty");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lname", "NotEmpty", new Object[]{"lname"}, "lname should not be empty");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "fname", "NotEmpty", new Object[]{"fname"}, "fname should not be empty");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "gender", "NotEmpty", new Object[]{"gender"}, "gender should not be empty");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "city", "NotEmpty", new Object[]{"city"}, "city should not be empty");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "phoneNumber", "NotEmpty", new Object[]{"phoneNumber"}, "phoneNumber should not be empty");
+
+        
         if(!client.getPassword().equals(client.getConfirmPassword()))
         {
-            errors.rejectValue("confirmPassword","unequal", "Passwords do not match");
+            errors.rejectValue("confirmPassword", "unequal", new Object[]{"confirmPassword"}, "asswords do not match");
         }
         Client client1=new Client();
         client1.setPhoneNumber(client.getPhoneNumber());
         try {
             List l = clientDao.searchMatching(conn, client1);
-
             if(!l.isEmpty())
             {
-                errors.rejectValue("phoneNumber", "duplicate", "user with phone number already exist");
+                errors.rejectValue("phoneNumber", "duplicate", new Object[]{"phoneNumber"}, "user with phone number already exist");
+                
             }
         } catch (SQLException e1) {
             // TODO Auto-generated catch block
@@ -71,26 +73,18 @@ public class ClientValidator implements Validator {
         user1.setUserName(client.getUserName());
         try {
             if (!userDao.searchMatching(conn, user1).isEmpty()) {
-                errors.rejectValue("userName", "duplicate", "userName already exists");
+                errors.rejectValue("userName", "duplicate", new Object[]{"userName"}, "userName already exists");
             }
+            System.out.println("errrrrrrr");
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
         if (client.getPassword().length() < 8 || client.getPassword().length() > 32) {
-            errors.rejectValue("password", "Size.userForm.password");
-        }
-        // if (customer.getContact().length() != 10) {
-        //     errors.rejectValue("contact", "length", new Object[]{"contact"}, "Contact must be number of 10 digits");        
-        // }
+            errors.rejectValue("password", "password", new Object[]{"password"}, "Password does not meet policy requirements");
 
-        // if (clientDao.isCustomerWithContactExists(customer.getContact())) {
-        //     errors.rejectValue("contact", "duplicate", new Object[]{"contact"}, "Customer with contact already exists");
-        // }
-
-        if( !(client.getGender().equals("M") || client.getGender().equals("F")) ){
-            errors.rejectValue("gender", "type", new Object[]{"gender"}, "Gender type should be M or F");
         }
+
 
     }
 }

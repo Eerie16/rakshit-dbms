@@ -24,9 +24,9 @@
             </c:forEach>
         </table>
         <h3>Add Plant</h3>
-            <input id="name" type="text"/>
-            <input id="address" type="text"/>
-            <input id="currentCapacity" type="number"/>
+            <input id="name" required="required" type="text"/>
+            <input id="address" required="required" type="text"/>
+            <input id="currentCapacity"  required="required" min="1" type="number"/>
             <input type="button" id="add_contact_btn" value="Add">
         
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -43,16 +43,17 @@ $(function() {
          url : '/plant/new',
          type: "post",
          data : {
-                name:$("#name").val(),
-                address:$("#address").val(),
-                currentCapacity:$("#currentCapacity").val()
+            name:$("#name").val(),
+            address:$("#address").val(),
+            currentCapacity:$("#currentCapacity").val()
          },
          success:function(data,status,xhr){
-                        location.reload();
-                    },
-                    error:function(error){
-                        alert(error);
-                    }
+            alert("Added plant succecsfully");
+            location.reload();
+        },
+        error:function(error){
+            alert("Unable to add plant");
+        }
       });
    });
 });

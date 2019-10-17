@@ -25,12 +25,12 @@
         </table>
         <h3>Add product</h3>
         <form:form action="/product/new" modelAttribute="newProduct" method="POST">
-    <form:label path="name"> Name </form:label>
-    <form:input path ="name"/>
+    <form:label  path="name"> Name </form:label>
+    <form:input required="required" path ="name"/>
     <form:errors path="name"></form:errors>
     <br>
     <form:label path="Price"> Price </form:label>
-    <form:input path ="Price"/>
+    <form:input required="required" path ="Price"/>
     <form:errors path="Price"></form:errors>
     <br>
     <form:select path="employeeId">

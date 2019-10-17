@@ -144,10 +144,10 @@ public class EmployeeController {
             e.printStackTrace();
         }
         employeeValidator.validate(employee, result);
-        // if (result.hasErrors()) {
-        //     m.addAttribute("plants", plantDao.loadAll(conn));
-        //     return "employee_new";
-        // }
+        if (result.hasErrors()) {
+            m.addAttribute("plants", plantDao.loadAll(conn));
+            return "employee_new";
+        }
         User user = new User();
         user.setUserName(employee.getUserName());
         user.setPassword(bCryptPasswordEncoder.encode(employee.getPassword()));

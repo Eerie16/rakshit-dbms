@@ -43,13 +43,6 @@ import java.security.Principal;
 import java.sql.*;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.demo.models.Client;
-import com.example.demo.models.ClientOrder;
-import com.example.demo.models.Employee;
-import com.example.demo.models.EmployeeEmail;
-import com.example.demo.models.EmployeePhoneNo;
-import com.example.demo.models.MadeOf;
-import com.example.demo.models.Manufactures;
 import com.example.demo.models.Plant;
 import com.example.demo.models.Products;
 import com.example.demo.models.RawMaterial;

@@ -95,6 +95,8 @@ public class ProductController {
     @Autowired
     UserDao userDao;
     @Autowired
+    ProductValidator productValidator;
+    @Autowired
     PlantValidator plantValidator;
     @Autowired
     ProductsDao productDao;
@@ -135,14 +137,14 @@ public class ProductController {
         return "product_show";
     }
     @PostMapping("/product/new")
-    public String product_new(@ModelAttribute("product") Products product,BindingResult result,Model m)
-            throws SQLException {
-                Connection conn = null;
-                try {
-                    conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/draft1", "root", "rakshit");
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+    public String product_new(@ModelAttribute("product") Products product,BindingResult result,Model m) throws SQLException {
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/draft1", "root", "rakshit");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
         productDao.create(conn, product);
         m.addAttribute("products", productDao.loadAll(conn));
         conn.close();

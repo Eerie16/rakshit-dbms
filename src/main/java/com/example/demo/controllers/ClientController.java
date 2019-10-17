@@ -157,6 +157,11 @@ private SessionRegistry sessionRegistry;
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        clientValidator.validate(client, result);
+        if(result.hasErrors()){
+            return "client_new";
+        }
+
         // employeeValidator.validate(employee, result);
         // if (result.hasErrors()) {
         //     m.addAttribute("plants", plantDao.loadAll(conn));

@@ -40,7 +40,7 @@
             <input type="submit" value="Update">
         </form:form>
         <h3>Add contacts</h3>
-        <input type="number" id="add_contact_tb">
+        <input type="tel" pattern="[6-9]\d{9}" id="add_contact_tb">
         <table>
             <tr>
                 <th>Contact</th>
